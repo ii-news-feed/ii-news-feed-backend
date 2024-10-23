@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    @Autowired
-    private FriendService friendService;
 
     @PostMapping
     public ResponseEntity<UserResponseDto> registerUser(@RequestBody SignupRequestDto reqDto) {
