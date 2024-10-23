@@ -3,7 +3,6 @@ package com.sparta.iinewsfeedproject.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -50,7 +49,4 @@ public class User extends Timestamped  {
         this.password = password;
     }
 
-    public void setName(String newName) {
-        this.name = name;
-    }
 }
