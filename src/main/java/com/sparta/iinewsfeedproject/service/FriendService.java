@@ -101,6 +101,7 @@ public class FriendService {
         }
 
         String status = requestDto.getStatus();
+
         if(status.equals("ACCEPT") || status.equals("REJECT")){
             String statusCheck = friendRepository.findAllByStatus(friendId);
             if(statusCheck.equals("PENDING")){
@@ -114,9 +115,11 @@ public class FriendService {
         return friendId;
     }
 
+
     private Friend findFriend(Long friendId) {
         return friendRepository.findById(friendId).orElseThrow(() ->
                 new IllegalArgumentException("비정상적인 접근입니다.")
         );
     }
+
 }
