@@ -61,6 +61,10 @@ public class FriendService {
             throw new UserNotFoundException("존재하지 않는 유저번호 입니다.");
         }
 
+        if(toUserId == fromUser.getId()){
+            throw new IllegalArgumentException("본인이 본인에게 친구 요청을 보낼 수 없습니다.");
+        }
+
         int count = friendRepository.findByToUserIdAndStatus(toUserId, fromUser.getId());
         int allCount = friendRepository.findAllById();
         int distinct = friendRepository.findByFromUserIdAndToUserId(fromUser.getId(), toUserId);
@@ -89,12 +93,14 @@ public class FriendService {
     public Long updateFriend(Long friendId, FriendRequestDto requestDto, User toUser) {
 
         Friend friend = findFriend(friendId);
-        String status = requestDto.getStatus();
+
         // 요청 응답시 - 로그인 id == to_user_id
-        int checkId = friendRepository.findByToUserIdAndStatusAndId(toUser.getId(), status, friendId);
+        int checkId = friendRepository.findByToUserIdAndStatusAndId(toUser.getId(), "PENDING", friendId);
         if(checkId == 0){
             throw new IllegalArgumentException("본인이 받은 요청만 응답할 수 있습니다.");
         }
+
+        String status = requestDto.getStatus();
         if(status.equals("ACCEPT") || status.equals("REJECT")){
             String statusCheck = friendRepository.findAllByStatus(friendId);
             if(statusCheck.equals("PENDING")){
