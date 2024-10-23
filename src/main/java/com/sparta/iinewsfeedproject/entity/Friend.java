@@ -24,17 +24,10 @@ public class Friend extends Timestamped  {
 
     // User 매핑을 두개나 해둘 필요 없이 user_id는 토큰에서 꺼내어서
     // 값을 넣어주면 될 것 같습니다.
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "toUserId")
+    private Long toUserId;
 
     @Column(name="status", nullable = false)
     @Comment(value = "친구요청 승인 여부 (PENDING : 대기(기본값), ACCEPT : 승인 / REJECT : 거절)")
     private String status;
-
-    public Friend(Long toUserId, String status, User fromUser) {
-        this.toUserId = toUserId;
-        this.status = status;
-        this.fromUser = fromUser;
-    }
-
 }

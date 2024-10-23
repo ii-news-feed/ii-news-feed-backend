@@ -10,7 +10,6 @@ import com.sparta.iinewsfeedproject.exception.UserNotFoundException;
 import com.sparta.iinewsfeedproject.jwt.JwtUtil;
 import com.sparta.iinewsfeedproject.repository.FriendRepository;
 import com.sparta.iinewsfeedproject.repository.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +67,7 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Long userId, String password) {
+    public void deactivateUser(Long userId, String password) {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if (userOptional.isEmpty()) {
@@ -86,24 +85,8 @@ public class UserService {
         friendRepository.deleteByFromUserId(userId);
         friendRepository.deleteByToUserId(userId);
 
-        // 사용자 삭제
-        userRepository.deleteById(userId);
-    }
-
-    public UserResponseDto showUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(()->
-                new NullPointerException("해당 유저는 찾을 수 없습니다")
-        );
-
-        return new UserResponseDto(user);
-    }
-
-    @Transactional
-    public UserResponseDto updateName(String name, HttpServletRequest req) {
-        User user = (User) req.getAttribute("user");
-
-        user.setName(name);
-
-        return new UserResponseDto(user);
+        // 사용자 비활성화 처리
+        user.deactivate();
+        userRepository.save(user);
     }
 }

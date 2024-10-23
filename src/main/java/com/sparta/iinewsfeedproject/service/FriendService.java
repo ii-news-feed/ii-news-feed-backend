@@ -32,24 +32,6 @@ public class FriendService {
         friendRepository.deleteByFromUserIdAndToUserId(fromUserId, userId);
     }
 
-    public FriendResponseDto createFriend(FriendRequestDto requestDto, User fromUser) {
-        Long toUserId = requestDto.getToUserId();
-        Optional<User> fromUserId = userRepository.findById(toUserId);
-        if (fromUserId.isEmpty()) {
-            throw new UserNotFoundException("존재하지 않는 유저번호 입니다.");
-        }
-
-        int count = friendRepository.findByToUserIdAndStatus(toUserId);
-        int allCount = friendRepository.findAllById();
-        if(count != 0 && allCount != 0){
-            throw new IllegalArgumentException("친구 요청을 이미 보낸 회원입니다.");
-        }
-        friendRepository.deleteByFromUserIdAndToUserId(fromUserId, userId);
-        Friend friend = new Friend(requestDto.getToUserId(), requestDto.getStatus(), fromUser);
-        Friend saveFriends = friendRepository.save(friend);
-        FriendResponseDto friendResponseDto = new FriendResponseDto(saveFriends);
-        return friendResponseDto;
-    }
 
     public List<FriendDto> getAcceptedFriends(Long userId) {
         Optional<User> fromUser = userRepository.findById(userId);
@@ -65,8 +47,4 @@ public class FriendService {
                 .collect(Collectors.toList());
     }
 
-    public List<FriendResponseDto> getFriends() {
-        String status = "PENDING"; // 대기중 상태값의 친구요청만 조회
-        return friendRepository.findByStatus(status).stream().map(FriendResponseDto::new).toList();
-    }
 }

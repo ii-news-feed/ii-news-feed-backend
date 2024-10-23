@@ -1,7 +1,6 @@
 package com.sparta.iinewsfeedproject.controller;
 
 import com.sparta.iinewsfeedproject.dto.ErrorResponseDto;
-import com.sparta.iinewsfeedproject.entity.User;
 import com.sparta.iinewsfeedproject.exception.FriendNotFoundException;
 import com.sparta.iinewsfeedproject.service.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class FriendController {
     @Autowired
     private FriendService friendService;
-
-    @PostMapping("")
-    public ResponseEntity<FriendResponseDto> createFriend(@RequestBody FriendRequestDto requestDto, HttpServletRequest request) {
-        User fromUser = (User)request.getAttribute("fromUser");
-        FriendResponseDto friend = friendService.createFriend(requestDto,fromUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(friend);
-    }
-
-    @GetMapping("")
-    public ResponseEntity<List<FriendResponseDto>> getFriends() {
-        List<FriendResponseDto> responseDto = friendService.getFriends();
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
-    }
 
     @DeleteMapping ("/{fromUserId}/friend/{userId}")
     public ResponseEntity<Void> deleteFriend(@PathVariable Long fromUserId, @PathVariable Long userId) {

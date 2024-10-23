@@ -12,10 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -33,13 +29,6 @@ public class UserController {
                 .body(userService.signUp(reqDto));
     }
 
-    @PutMapping("/name")
-    public ResponseEntity<UserResponseDto> updateName(@RequestBody String name, HttpServletRequest httpReq) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userService.updateName(name, httpReq));
-    }
-
     @PostMapping("/login")
     public ResponseEntity<UserResponseDto> loginUser(@RequestBody LoginRequestDto reqDto, HttpServletResponse res) {
         return ResponseEntity
@@ -47,24 +36,10 @@ public class UserController {
                 .body(userService.login(reqDto, res));
     }
 
-    @GetMapping("/{userid}")
-    public ResponseEntity<UserResponseDto> showUser(@PathVariable Long userid) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userService.showUser(userid));
-    }
-
-    @GetMapping("/{userId}/friends")
-    public ResponseEntity<Map<String, List<FriendDto>>> getFriends(@PathVariable Long userId) {
-        List<FriendDto> friends = friendService.getAcceptedFriends(userId);
-        Map<String, List<FriendDto>> response = new HashMap<>();
-        response.put("contents", friends);
-        return ResponseEntity.ok(response);
-    }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId, @RequestBody DeleteUserRequestDto deleteUserRequest) {
-        userService.deleteUser(userId, deleteUserRequest.getPassword());
+    public ResponseEntity<Void> deactivateUser(@PathVariable Long userId, @RequestBody DeleteUserRequestDto deleteUserRequest) {
+        userService.deactivateUser(userId, deleteUserRequest.getPassword());
         return ResponseEntity.noContent().build();
     }
 
